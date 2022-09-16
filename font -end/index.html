@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottery</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+    <div class="form-style-5">
+        <form class="example" id="lotterryform">
+            <fieldset>
+                <legend><span class="number">1</span> Lottery Info</legend>
+                <input type="text" placeholder="ID" name="search" id="txtid">
+                <button type="submit" id="btnsearch"><i class="fa fa-search"></i></button>
+                <input type="date" name="field2" id="txtdate">
+                <label for="job">Lottery:</label>
+                <select id="job" name="field4">
+                    <optgroup label="Lotterys" id="lname">
+                        <option value="-Select-">-Select-</option>
+                        <option value="Goviseta">Goviseta</option>
+                        <option value="Jayoda">Jayoda</option>
+                    </optgroup>
+                </select>
+            </fieldset>
+            <input type="submit" value="Submit" id="btnSubmit" >
+        </form>
+    </div>
+
+    <div id="table">
+        <table class="styled-table" id="tablel">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                </tr>
+            </thead >
+            <tbody id="lotterybody">
+
+            </tbody>
+        </table>
+    </div>
+    <script src="assert/Jquery/jquery-3.6.0.min.js"></script>
+    <script>
+        var baseUrl="http://localhost:8080/Interview Form/Govisetha";
+        $("#btnSubmit").click(function (){
+            saveDriver();
+        });
+        function savelottery(){
+            var data=$("#lotterryform").serialize();
+            $.ajax({
+                url:baseUrl,
+                method:"POST",
+                data:data,
+                success:function (res){
+                    if (res.code==200){
+                        alert("Successfully lottery Registered");
+                        clearForm();
+                        loadAllDriver();
+                    }
+                },
+                error: function (ob){
+                    alert(ob.responseJSON.message);
+                }
+            });
+        }
+        $("#btnsearch").click(function (){
+            searchlottery();
+
+        });
+        //------------------------------------------------------------------------------------------------------------
+        function  searchlottery(){
+            var lottery=$("#txtid").val();
+            $.ajax({
+                url:baseUrl +"/"+ glid ,
+                method:"GET",
+                success: function (res){
+                    if (res.code==200){
+                        var lottery=res.data;
+                        $("#txtid").val(lottery.glid);
+                        $("#txtdate").val(lottery.date);
+                        $("#lname").val(lottery.glname);
+
+                    }else {
+                        clearForm();
+                        loadAlllottery();
+                    }
+                },
+                error:function (ob){
+                    alert(ob.responseJSON.message);
+                }
+            });
+        }
+        function clearForm() {
+            $("#txtid").val("");
+            $("#txtdate").val("");
+            $("#lname").val("");
+            $("#txtid").focus();
+        }
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        $("#btnsubmit").click(function (){
+            loadAlllottery();
+        });
+        function loadAlllottery(){
+            $("#lotterybody").empty();
+            $.ajax({
+                url: baseUrl,
+                method: "GET",
+                success:function (resp){
+                    for (const lottery of resp.data) {
+                        let row = `<tr><td>${lottery.glid}</td>><td>${lottery. glname}</td>>
+<td>${lottery.date}</td></tr>`;
+                        $("#tablel").append(row);
+                    }
+                    bindClickEvent();
+                    clearForm();
+                },
+                error: function (ob) {
+                    alert(ob.responseJSON.message);
+                }
+            });
+        }
+        function bindClickEvent() {
+            $("#lotterybody>tr").click(function () {
+                //Get values from the selected row
+                let id = $(this).children().eq(0).text();
+                let date = $(this).children().eq(1).text();
+                let lotterytype = $(this).children().eq(2).text();
+
+                //Set values to the text-fields
+                $("#txtid").val(id);
+                $("#txtdate").val(date);
+                $("#lname").val(lotterytype);
+
+            });
+        }
+    </script>
+</body>
+
+</html>
