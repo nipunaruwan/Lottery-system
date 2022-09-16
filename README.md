@@ -1,6 +1,6 @@
 # Lottery-system
 <h2>font-end-HTmL,CSS,Jquery </h2<br>
-<h2back-end -Spring hipernate dependancies and ajax to connect UI<h2
+<h2back-end -Spring hipernate dependancies and ajax to connect UI</h2>
 
 
 
